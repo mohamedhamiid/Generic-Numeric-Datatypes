@@ -9,100 +9,124 @@ namespace myStd
     class Type : public Numeric
     {
     private:
-        T value{};
+        std::unique_ptr<T> ptr;
 
     public:
         // Constructors
         Type() = default;
-        explicit Type(T val) : value(val) {}
+        explicit Type(T val)
+        {
+            ptr = std::make_unique<T>(val);
+        }
 
         // Destructor
         ~Type() = default;
 
-        // Assignment operators
-        template <typename U>
-        Type<T> &operator=(const Type<U> &val)
+        // Copy Constructor
+        Type(const Type<T> &obj)
         {
-            if constexpr (!std::is_same_v<T, U>)
-                throw std::runtime_error("Type mismatch in assignment");
-            value = val;
+            ptr = std::make_unique<T>(*(obj.ptr));
+        }
+
+        // Move constructor
+        Type(Type<T> &&obj)
+        {
+            ptr = std::make_unique<T>(*(obj.ptr));
+        }
+
+        // Assignment operators
+        Type<T> &operator=(const Type<T> &val)
+        {
+            ptr = std::make_unique<T>(*(val.ptr));
+            return *this;
+        }
+
+        Type<T> &operator=(std::unique_ptr<Numeric> val)
+        {
+            ptr = std::make_unique<T>(*((dynamic_cast<Type<T> *>(val.get()))->ptr));
             return *this;
         }
 
         // Arithmetic operations (compound assignment)
         Numeric &operator+=(Numeric &obj) override
         {
-            value += dynamic_cast<Type<T> &>(obj).value;
+            *(this->ptr) = *(this->ptr) + *(dynamic_cast<Type<T> &>(obj).ptr);
             return *this;
         }
 
         Numeric &operator-=(Numeric &obj) override
         {
-            value -= dynamic_cast<Type<T> &>(obj).value;
+            *(this->ptr) = *(this->ptr) + *(dynamic_cast<Type<T> &>(obj).ptr);
             return *this;
         }
 
         Numeric &operator*=(Numeric &obj) override
         {
-            value *= dynamic_cast<Type<T> &>(obj).value;
+            *(this->ptr) = *(this->ptr) * *(dynamic_cast<Type<T> &>(obj).ptr);
             return *this;
         }
 
         Numeric &operator/=(Numeric &obj) override
         {
-            value /= dynamic_cast<Type<T> &>(obj).value;
+            *(this->ptr) = *(this->ptr) / *(dynamic_cast<Type<T> &>(obj).ptr);
             return *this;
         }
 
         // Arithmetic operations (return new object)
         std::unique_ptr<Numeric> operator+(Numeric &obj) override
         {
-            // return (value + dynamic_cast<Type<T> &>(obj).value);
+            return std::make_unique<Type<T>>(*(this->ptr) + *(dynamic_cast<Type<T> &>(obj).ptr));
         }
 
         std::unique_ptr<Numeric> operator-(Numeric &obj) override
         {
-            return std::make_unique<Type<T>>(value - dynamic_cast<Type<T> &>(obj).value);
+            return std::make_unique<Type<T>>(*(this->ptr) - *(dynamic_cast<Type<T> &>(obj).ptr));
         }
 
         std::unique_ptr<Numeric> operator*(Numeric &obj) override
         {
-            return std::make_unique<Type<T>>(value * dynamic_cast<Type<T> &>(obj).value);
+            return std::make_unique<Type<T>>(*(this->ptr) * *(dynamic_cast<Type<T> &>(obj).ptr));
         }
 
         std::unique_ptr<Numeric> operator/(Numeric &obj) override
         {
-            return std::make_unique<Type<T>>(value / dynamic_cast<Type<T> &>(obj).value);
+            return std::make_unique<Type<T>>(*(this->ptr) / *(dynamic_cast<Type<T> &>(obj).ptr));
         }
 
         // Comparison operators
         bool operator<(Numeric &obj) override
         {
-            return value < dynamic_cast<Type<T> &>(obj).value;
+            return *(this->ptr) < *(dynamic_cast<Type<T> &>(obj).ptr);
         }
 
         bool operator>(Numeric &obj) override
         {
-            return value > dynamic_cast<Type<T> &>(obj).value;
+            return *(this->ptr) > *(dynamic_cast<Type<T> &>(obj).ptr);
         }
 
         bool operator==(Numeric &obj) override
         {
-            return value == dynamic_cast<Type<T> &>(obj).value;
+            return *(this->ptr) == *(dynamic_cast<Type<T> &>(obj).ptr);
         }
 
         // Friend functions for I/O
 
         friend std::ostream &operator<<(std::ostream &os, const Type<T> &obj)
         {
-            os << obj.value;
+            os << *(obj.ptr);
             return os;
         }
 
         friend std::istream &operator>>(std::istream &is, Type<T> &obj)
         {
-            is >> obj.value;
+            is >> *(obj.ptr);
             return is;
+        }
+
+        std::ostream &print(std::ostream &os)
+        {
+            os << *this;
+            return os;
         }
     };
 }

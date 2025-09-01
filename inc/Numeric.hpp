@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include <memory>
 
 namespace myStd
@@ -25,5 +26,7 @@ namespace myStd
         virtual bool operator<(Numeric &) = 0;
         virtual bool operator>(Numeric &) = 0;
         virtual bool operator==(Numeric &) = 0;
+
+        virtual std::ostream &print(std::ostream &os) = 0;
     };
 }

@@ -1,23 +1,26 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include "../inc/Numeric.hpp"
 #include "../inc/Type.hpp"
 
 int main()
 {
-    std::vector<myStd::Numeric> v;
+    // Constructor
+    // myStd::Type<int> x(10);
 
-    myStd::Type<int> x(10), z;
-    myStd::Type<double> y(2.5);
+    // Copy Constructor
+    // myStd::Type<int> x(10), y(15), z;
+    // std::cout << x << " " << z << std::endl;
 
-    try
-    {
-        x = z;
-    }
-    catch (const std::runtime_error &e)
-    {
-        std::cout << "Error: " << e.what() << "\n";
-    }
-    std::cout << x;
-    return 0;
+    // Vector
+    myStd::Type<int> x(10), y(15);
+    myStd::Type<double> z(10.5);
+    std::vector<std::unique_ptr<myStd::Numeric>> v;
+    v.push_back(std::make_unique<myStd::Type<int>>(x));
+    v.push_back(std::make_unique<myStd::Type<int>>(y));
+    v.push_back(std::make_unique<myStd::Type<double>>(z));
+    sort(v.begin(), v.end());
+    for (const auto &i : v)
+        i->print(std::cout);
 }
