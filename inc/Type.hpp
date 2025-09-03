@@ -1,7 +1,9 @@
 #pragma once
-#include "../inc/Numeric.hpp"
 #include <iostream>
 #include <memory>
+
+#include "Numeric.hpp"
+#include "Complex.hpp"
 namespace myStd
 {
     // Template class definition and implementation
@@ -129,4 +131,5 @@ namespace myStd
             return os;
         }
     };
+
 }
