@@ -10,10 +10,12 @@ This library implements a type-safe numeric wrapper system using modern C++ feat
 
 - **Polymorphic Design**: Abstract base class `Numeric` enables runtime polymorphism
 - **Type Safety**: Template-based implementation with compile-time type checking
+- **Mixed-Type Arithmetic**:Arithmetic between different types (e.g., int + double, int + complex) is supported with automatic type promotion.
 - **Smart Pointer Integration**: Uses `std::unique_ptr` for memory safety
 - **Complete Operator Set**: Full arithmetic and comparison operator support
 - **Stream I/O Support**: Built-in input/output stream operators
 - **Modern C++ Standards**: Utilizes C++17/20 features like `std::is_same_v` and `if constexpr`
+- **Type Traits**:Utilities like is_complex<T> allow compile-time detection of complex types.
 
 ## Architecture
 
