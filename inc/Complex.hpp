@@ -90,6 +90,11 @@ namespace myStd
             return !(*this == obj);
         }
 
+        double getValue()
+        {
+            return std::sqrt(this->real * this->real + this->img * this->img);
+        }
+
         friend std::ostream &operator<<(std::ostream &os, const myStd::Complex<T, U> &c)
         {
             os << "(" << c.real << (c.img >= 0 ? " + " : " - ")

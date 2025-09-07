@@ -2,6 +2,7 @@
 #include <iostream>
 #include <memory>
 
+#include "Utils.hpp"
 #include "Numeric.hpp"
 #include "Complex.hpp"
 namespace myStd
@@ -98,7 +99,11 @@ namespace myStd
         // Comparison operators
         bool operator<(Numeric &obj) override
         {
-            return *(this->ptr) < *(dynamic_cast<Type<T> &>(obj).ptr);
+            Type<T> *castedObj = dynamic_cast<Type<T> *>(&obj);
+            if (typeid(*this) == typeid(castedObj))
+                return *(this->ptr) < *(castedObj->ptr);
+
+            return this->getValue() < obj.getValue();
         }
 
         bool operator>(Numeric &obj) override
@@ -127,8 +132,20 @@ namespace myStd
 
         std::ostream &print(std::ostream &os)
         {
-            os << *this;
+            os << *this << std::endl;
             return os;
+        }
+
+        double getValue()
+        {
+            if constexpr (is_complex<T>::value)
+            {
+                return static_cast<double>(this->ptr->getValue());
+            }
+            else
+            {
+                return static_cast<double>(*(this->ptr));
+            }
         }
     };
 

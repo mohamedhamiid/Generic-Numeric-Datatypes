@@ -28,5 +28,7 @@ namespace myStd
         virtual bool operator==(Numeric &) = 0;
 
         virtual std::ostream &print(std::ostream &os) = 0;
+
+        virtual double getValue() = 0;
     };
 }
