@@ -204,11 +204,12 @@ namespace myStd
          */
         friend std::istream &operator>>(std::istream &is, myStd::Complex<T, U> &c)
         {
-            // Example input format: (real imag)
-            char ch;
-            is >> ch; // read '('
-            is >> c.real >> c.img;
-            is >> ch; // read ')'
+            is.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Enter real part : " << std::endl;
+            is >> c.real;
+
+            std::cout << "Enter imaginary part : " << std::endl;
+            is >> c.img;
             return is;
         }
     };

@@ -90,6 +90,23 @@ namespace myStd
         }
 
         /**
+         * @brief Copy constructor.
+         * @param uptr Unique pointer to a Numeric object.
+         * @throws std::runtime_error if assignment is invalid.
+         */
+        Type(std::unique_ptr<Numeric> uptr)
+        {
+            if (auto *castedPtr = dynamic_cast<Type<T> *>(uptr.get()))
+            {
+                ptr = std::make_unique<T>(*(castedPtr->ptr));
+            }
+            else
+            {
+                throw(std::runtime_error("Invalid Assignment!"));
+            }
+        }
+
+        /**
          * @brief Move constructor.
          * @param obj Object to move from.
          */
@@ -426,7 +443,12 @@ namespace myStd
          */
         friend std::istream &operator>>(std::istream &is, Type<T> &obj)
         {
-            is >> *(obj.ptr);
+            T in;
+            is >> in;
+            if (obj.ptr)
+                *(obj.ptr) = in;
+            else
+                obj.ptr = std::make_unique<T>(in);
             return is;
         }
 
